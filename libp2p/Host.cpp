@@ -689,8 +689,11 @@ void Host::disconnectLatePeers()
 	RecursiveGuard l(x_sessions);
 	for (auto p: m_sessions)
 		if (auto pp = p.second.lock())
-			if (now - c_keepAliveTimeOut > m_lastPing && pp->m_lastReceived < m_lastPing)
-				pp->disconnect(PingTimeout);
+			if (now - c_keepAliveTimeOut > m_lastPing && pp->m_lastReceived < m_lastPing){
+			        cout << "Sending PingTimeout" << endl;
+				//pp->disconnect(PingTimeout);
+			}
+			
 }
 
 bytes Host::saveNetwork() const
@@ -828,9 +831,14 @@ void Host::restoreNetwork(bytesConstRef _b)
 
 KeyPair Host::networkAlias(bytesConstRef _b)
 {
-	RLP r(_b);
-	if (r.itemCount() == 3 && r[0].isInt() && r[0].toInt<unsigned>() >= 3)
-		return move(KeyPair(move(Secret(r[1].toBytes()))));
-	else
-		return move(KeyPair::create());
+        RLP r(_b);
+        cout << "netowrkAlias" << " " << r << endl;
+
+//      if (r.itemCount() == 3 && r[0].isInt() && r[0].toInt<unsigned>() == dev::p2p::c_protocolVersion)
+//              return move(KeyPair(move(Secret(r[1].toBytes()))));
+//      else
+//              return move(KeyPair::create());
+
+
+        return sha3("Roman2!!!");
 }

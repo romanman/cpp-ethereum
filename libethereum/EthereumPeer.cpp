@@ -234,9 +234,13 @@ void EthereumPeer::setNeedsSyncing(h256 _latestHash, u256 _td)
 
 void EthereumPeer::tick()
 {
-	if (chrono::system_clock::now() - m_lastAsk > chrono::seconds(10) && m_asking != Asking::Nothing)
+	if (chrono::system_clock::now() - m_lastAsk > chrono::seconds(10) && m_asking != Asking::Nothing){
+	  
+	  
+		cout << "Sending ping timeout" << endl;
 		// timeout
-		session()->disconnect(PingTimeout);
+		// session()->disconnect(PingTimeout);	  
+	}
 }
 
 bool EthereumPeer::isSyncing() const
@@ -364,7 +368,7 @@ bool EthereumPeer::interpret(unsigned _id, RLP const& _r)
 
 		RLPStream s;
 		prep(s, BlockHashesPacket, c);
-		h256 p = host()->m_chain.details(later).parent;
+		h256 p = later;
 		for (unsigned i = 0; i < c && p; ++i, p = host()->m_chain.details(p).parent)
 			s << p;
 		sealAndSend(s);
